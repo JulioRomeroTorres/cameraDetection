@@ -218,11 +218,6 @@ def displayVideo(rawData, modelTorch):
 
     cv2.imshow('Frame With Detection',framemodCir)
 
-    '''carLabel.destroyObject()
-    motorLabel.destroyObject()
-    busLabel.destroyObject()
-    truckLabel.destroyObject()'''
-
     if cv2.waitKey(25) & 0xFF == ord('q'):
         break
           
