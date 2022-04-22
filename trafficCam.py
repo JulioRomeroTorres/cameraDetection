@@ -168,7 +168,7 @@ class trafficCamera():
       print('Print Dimension: ', frame.shape)
       frameDetect   = modelTorch(frame)
       print('Result: ', frameDetect.xyxy)
-      self.getCenter(frameDetect, labelUsed)
+      self.getCenter(frameDetect, self.labelUsed)
       framemodDetect  = np.squeeze(frameDetect.render())
       framemodCir = self.drawCenter(framemodDetect)
 
