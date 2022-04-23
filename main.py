@@ -15,16 +15,19 @@ if __name__ == '__main__':
   limitReg1 = [  (624,300), (310,8) ]
   limitReg2 = [ (302,31), (261,26), (117,48), (162,124), (338,97)  ]
   cameraD1  = trafficCamera(labelUsed, limitReg1, limitReg2)
+  print('Camera 1: ',cameraD1.limitReg1, ' ', cameraD1.limitReg2)
   
-  limitReg1 = [  (624,300), (310,8) ]
-  limitReg2 = [ (302,31), (261,26), (117,48), (162,124), (338,97)  ]
+  limitReg1 = [  (349,8), (322,8) ]
+  limitReg2 = [ (587,346), (347,11), (321,10), (273,344)  ]
   cameraD2  = trafficCamera(labelUsed, limitReg1, limitReg2)
+  print('Camera 2: ',cameraD2.limitReg1, ' ', cameraD2.limitReg2)
   
-  limitReg1 = [  (624,300), (310,8) ]
-  limitReg2 = [ (302,31), (261,26), (117,48), (162,124), (338,97)  ]
+  limitReg1 = [  (371,12), (339,9) ]
+  limitReg2 = [ (567,352), (375,18), (338,15), (268,348) ]
   cameraD3  = trafficCamera(labelUsed, limitReg1, limitReg2)
+  print('Camera 3: ',cameraD3.limitReg1, ' ', cameraD3.limitReg2)
   
-  cameraD1.createDatset(2, 1, pathVideos, pathDataTrain)
+  #cameraD1.createDatset(2, 1, pathVideos, pathDataTrain)
   
   model = torch.hub.load('ultralytics/yolov5','yolov5s')
   

@@ -76,13 +76,14 @@ class trafficCamera():
       into1Point = ((limitReg[1][0] - limitReg[0][0])*(globalPos[1] - limitReg[0][1]) - (limitReg[1][1] - limitReg[0][1])*(globalPos[0] - limitReg[0][0])) < 0  
       return into1Point
 
-    elif( dimLimit > 4 ):
+    elif( dimLimit >= 3 ):
       auxArr = []
-      for i in range(0,4):
-        into1Point = ((limitReg[(i+1)%4][0] - limitReg[i][0])*(globalPos[1] - limitReg[i][1]) - (limitReg[(i+1)%4][1] - limitReg[i][1])*(globalPos[0] - limitReg[i][0])) < 0 
+      for i in range(0,dimLimit):
+        into1Point = ((limitReg[(i+1)%dimLimit][0] - limitReg[i][0])*(globalPos[1] - limitReg[i][1]) - (limitReg[(i+1)%dimLimit][1] - limitReg[i][1])*(globalPos[0] - limitReg[i][0])) < 0 
         auxArr.append(int(into1Point))
       
-      if( sum(auxArr) == 0 ):
+      print('Many of valids: ', sum(auxArr) )
+      if( sum(auxArr) == dimLimit ):
         return True
       else:
         return False
@@ -165,9 +166,9 @@ class trafficCamera():
     
     while(rawData.isOpened()):
       ret, frame    = rawData.read()
-      print('Print Dimension: ', frame.shape)
+      #print('Print Dimension: ', frame.shape)
       frameDetect   = modelTorch(frame)
-      print('Result: ', frameDetect.xyxy)
+      #print('Result: ', frameDetect.xyxy)
       self.getCenter(frameDetect, self.labelUsed)
       framemodDetect  = np.squeeze(frameDetect.render())
       framemodCir = self.drawCenter(framemodDetect)
