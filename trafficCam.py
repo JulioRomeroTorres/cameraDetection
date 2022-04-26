@@ -166,7 +166,6 @@ class trafficCamera():
     
     while(rawData.isOpened()):
       ret, frame    = rawData.read()
-      #print('Print Dimension: ', frame.shape)
       frameDetect   = modelTorch(frame)
       #print('Result: ', frameDetect.xyxy)
       self.getCenter(frameDetect, self.labelUsed)

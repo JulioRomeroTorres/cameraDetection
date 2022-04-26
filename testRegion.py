@@ -39,7 +39,7 @@ def getPoints(event, x, y, flag, params):
     
 def getLimitvideo():
 
-    video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_15.avi')
+    video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_11.mp4')
     count = 0
 
     while(video.isOpened()):
@@ -80,9 +80,13 @@ def displayVideo():
 if __name__ == '__main__':
 
     labelUsed = [ 2, 3, 5, 7 ]
-    getLimitvideo()
-    #displayResul()
+    #getLimitvideo()
+    displayResul()
     
+
+
+
+
 
 
 
