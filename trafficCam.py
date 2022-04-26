@@ -56,48 +56,64 @@ class trafficCamera():
         self.carLabel.count = self.carLabel.count + 1
         self.carLabel.arrPrecis.append(resultPred[0][i,4].item())
 
-      elif resultPred[0][i,5].item() == arrIdlabel[1]: 
+      elif resultPred[0][i,5].item() == arrIdlabel[1]:
+        self.truckLabel.defineCenter(resultPred[0][i,0].item(), resultPred[0][i,1].item(), resultPred[0][i,2].item(), resultPred[0][i,3].item() )  
+        self.truckLabel.count = self.truckLabel.count + 1
+        self.truckLabel.arrPrecis.append(resultPred[0][i,4].item())
+
+      elif resultPred[0][i,5].item() == arrIdlabel[2]: 
         self.motorLabel.defineCenter(resultPred[0][i,0].item(), resultPred[0][i,1].item(), resultPred[0][i,2].item(), resultPred[0][i,3].item() )
         self.motorLabel.count = self.motorLabel.count + 1
         self.motorLabel.arrPrecis.append(resultPred[0][i,4].item())
 
-      elif resultPred[0][i,5].item() == arrIdlabel[2]:
+      elif resultPred[0][i,5].item() == arrIdlabel[3]:
         self.busLabel.defineCenter(resultPred[0][i,0].item(), resultPred[0][i,1].item(), resultPred[0][i,2].item(), resultPred[0][i,3].item() )
         self.busLabel.count = self.busLabel.count + 1
         self.busLabel.arrPrecis.append(resultPred[0][i,4].item())
 
-      elif resultPred[0][i,5].item() == arrIdlabel[3]:
-        self.truckLabel.defineCenter(resultPred[0][i,0].item(), resultPred[0][i,1].item(), resultPred[0][i,2].item(), resultPred[0][i,3].item() )  
-        self.truckLabel.count = self.truckLabel.count + 1
-        self.truckLabel.arrPrecis.append(resultPred[0][i,4].item())
-  
-  def estimateDist(self):
-    arrDist = []
+  def estimateDist(self, type, posX, posY):
     
-    for i in range(0, self.carLabel.count):
-      distRealx = ( self.carLabel.arrCentx[i] - self.pointRef[0] )*(self.carLabel.arrCentx[i] - self.pointRef[0])
-      distRealy = ( self.carLabel.arrCenty[i] - self.pointRef[1] )*(self.carLabel.arrCenty[i] - self.pointRef[1])
-      arrDist.append( self.realScale*math.sqrt( distRealx + distRealy )  )
-    
-    for i in range(0, self.truckLabel.count):
-      distRealx = ( self.truckLabel.arrCentx[i] - self.pointRef[0] )*(self.truckLabel.arrCentx[i] - self.pointRef[0])
-      distRealy = ( self.truckLabel.arrCenty[i] - self.pointRef[1] )*(self.truckLabel.arrCenty[i] - self.pointRef[1])
-      arrDist.append( self.realScale*math.sqrt( distRealx + distRealy )  )
+    if type == 0:
+      
+      distRealx = ( posX - self.pointRef[0] )*(posX - self.pointRef[0])
+      distRealy = ( posY - self.pointRef[1] )*(posY - self.pointRef[1])
+      distPoint = 1.0*self.realScale*math.sqrt( distRealx + distRealy ) 
+      
+      return distPoint 
 
-    return arrDist
+    elif type == 1:
+      arrDist = []
+      
+      for i in range(0, self.carLabel.count):
+        distRealx = ( self.carLabel.arrCentx[i] - self.pointRef[0] )*(self.carLabel.arrCentx[i] - self.pointRef[0])
+        distRealy = ( self.carLabel.arrCenty[i] - self.pointRef[1] )*(self.carLabel.arrCenty[i] - self.pointRef[1])
+        arrDist.append( self.realScale*math.sqrt( distRealx + distRealy )  )
+      
+      for i in range(0, self.truckLabel.count):
+        distRealx = ( self.truckLabel.arrCentx[i] - self.pointRef[0] )*(self.truckLabel.arrCentx[i] - self.pointRef[0])
+        distRealy = ( self.truckLabel.arrCenty[i] - self.pointRef[1] )*(self.truckLabel.arrCenty[i] - self.pointRef[1])
+        arrDist.append( self.realScale*math.sqrt( distRealx + distRealy )  )
+
+      return arrDist
   
-  def putDistance(self, frame):
+  def putDistance(self, type, posX, posY, frame):
     
-    distArr = self.estimateDist()
     frameText = frame
 
-    for i in range(0, self.carLabel.count):
-      frameText = cv2.putText(img = frameText, text= str(distArr[i]), org = ( self.carLabel.arrCentx[i], self.carLabel.arrCenty[i] ), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
+    if type == 0:
+      distP = self.estimateDist(0,posX, posY)
+      frameText = cv2.putText(img = frameText, text= str(distP), org = ( posX, posY), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
+      return frameText, distP
+    elif type == 1:
+      
+      distArr = self.estimateDist(1,0,0)
+      for i in range(0, self.carLabel.count):
+        frameText = cv2.putText(img = frameText, text= str(distArr[i]), org = ( self.carLabel.arrCentx[i], self.carLabel.arrCenty[i] ), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
 
-    for i in range(0, self.truckLabel.count):
-      frameText = cv2.putText(img = frameText, text= str(distArr[i+self.carLabel.count]), org = ( self.carLabel.arrCentx[i], self.carLabel.arrCenty[i] ), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
+      for i in range(0, self.truckLabel.count):
+        frameText = cv2.putText(img = frameText, text= str(distArr[i+self.carLabel.count]), org = ( self.carLabel.arrCentx[i], self.carLabel.arrCenty[i] ), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
+        return frameText
     
-    return frameText
 
   def intoRegion(self, globalPos, limitReg ):
 
@@ -127,6 +143,8 @@ class trafficCamera():
   def drawCenter(self, frame):
 
     validFrame = False
+    arrCar = []
+    arrTruck = []
 
     for i in range(0, self.carLabel.count):
 
@@ -137,26 +155,10 @@ class trafficCamera():
       
       if validFrame:
         frame = self.addCiclec( frame, posX, posY )
+        frame, valC = self.putDistance(0, posX, posY, frame)
+        arrCar.append(valC)
+        #plc2Sent.sendData()
 
-    for i in range(0, self.motorLabel.count):
-      
-      posX = self.motorLabel.arrCentx[i]
-      posY = self.motorLabel.arrCenty[i]
-      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 )
-      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 ) and self.intoRegion( ( posX, posY), self.limitReg2 )
-    
-      if validFrame:
-        frame = self.addCiclec( frame, posX, posY)
-
-    for i in range(0, self.busLabel.count):
-      
-      posX = self.busLabel.arrCentx[i]
-      posY = self.busLabel.arrCenty[i]
-      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 )
-      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 ) and self.intoRegion( ( posX, posY), self.limitReg2 )
-      
-      if validFrame:  
-        frame = self.addCiclec( frame, posX, posY )
 
     for i in range(0, self.truckLabel.count):
       
@@ -167,8 +169,37 @@ class trafficCamera():
       
       if validFrame:  
         frame = self.addCiclec( frame, posX, posY)
+        frame,valTr = self.putDistance(0, posX, posY, frame)
+        arrTruck.append(valTr)
 
-    return frame
+
+    for i in range(0, self.motorLabel.count):
+      
+      posX = self.motorLabel.arrCentx[i]
+      posY = self.motorLabel.arrCenty[i]
+      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 )
+      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 ) and self.intoRegion( ( posX, posY), self.limitReg2 )
+    
+      if validFrame:
+        frame = self.addCiclec( frame, posX, posY)
+        frame = self.putDistance(0, posX, posY, frame)
+        frame,valTr = self.putDistance(0, posX, posY, frame)
+        arrTruck.append(valTr)
+
+    for i in range(0, self.busLabel.count):
+      
+      posX = self.busLabel.arrCentx[i]
+      posY = self.busLabel.arrCenty[i]
+      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 )
+      validFrame = self.intoRegion( ( posX, posY), self.limitReg1 ) and self.intoRegion( ( posX, posY), self.limitReg2 )
+      
+      if validFrame:  
+        frame = self.addCiclec( frame, posX, posY )
+        frame = self.putDistance(0, posX, posY, frame)
+        frame,valTr = self.putDistance(0, posX, posY, frame)
+        arrTruck.append(valTr)
+
+    return frame, arrCar, arrTruck
 
   def createDatset(self, idStart, idEnd, pathStart, pathEnd):
 

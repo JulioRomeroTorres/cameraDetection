@@ -26,13 +26,28 @@ if __name__ == '__main__':
   cameraD1  = trafficCamera( scaleCamera1, refCamera1, labelUsed, limitReg1, limitReg2)
   
   limitReg1 = [  (349,8), (322,8) ]
-  limitReg2 = [ (587,346), (347,11), (321,10),`` (273,344)  ]
+  limitReg2 = [ (587,346), (347,11), (321,10),(273,344)  ]
   cameraD2  = trafficCamera( scaleCamera2, refCamera2, labelUsed, limitReg1, limitReg2)
   
   limitReg1 = [  (371,12), (339,9) ]
   limitReg2 = [ (567,352), (375,18), (338,15), (268,348) ]
   cameraD3  = trafficCamera( scaleCamera3, refCamera3, labelUsed, limitReg1, limitReg2)
   
+  ipPlc   = '192.168.0.1'
+  rackPlc = 0
+  slotPlc = 1
+  plc1 =   plcS7(ipPlc, rackPlc, slotPlc)
+
+  ipPlc   = '192.168.0.1'
+  rackPlc = 0
+  slotPlc = 1
+  plc2 =   plcS7(ipPlc, rackPlc, slotPlc)
+  
+  ipPlc   = '192.168.0.1'
+  rackPlc = 0
+  slotPlc = 1
+  plc3 =   plcS7(ipPlc, rackPlc, slotPlc)
+
   #cameraD1.createDatset(2, 1, pathVideos, pathDataTrain)
 
   #model =   torch.hub.load('ultralytics/yolov5','yolov5s')
@@ -54,31 +69,35 @@ if __name__ == '__main__':
     frameDetect   = model(frame)
     cameraD1.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
-    framemodCir1 = cameraD1.drawCenter(framemodDetect)
-    framemodCT1 = cameraD1.putDistance(framemodCir1)
+    framemodCir1, arrCar, arrTruck = cameraD1.drawCenter(framemodDetect)
+    #plc1.sendData(arrCar)
+    #framemodCT1 = cameraD1.putDistance(framemodCir1)
 
     ret2, frame  = dataCamera2.read()
     frameDetect  = model(frame)
     cameraD2.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
-    framemodCir2 = cameraD2.drawCenter(framemodDetect)
-    framemodCT2 = cameraD2.putDistance(framemodCir2)
+    framemodCir2, arrCar, arrTruck = cameraD2.drawCenter(framemodDetect)
+    #plc2.sendData(arrTruck)
+    #framemodCT2 = cameraD2.putDistance(framemodCir2)
 
     ret3, frame   = dataCamera3.read()
     frameDetect   = model(frame)
     cameraD3.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
-    framemodCir3 = cameraD3.drawCenter(framemodDetect)
-    framemodCT3 = cameraD3.putDistance(framemodCir3)
+    framemodCir3, arrCar, arrTruck = cameraD3.drawCenter(framemodDetect)
+    #plc3.sendData(arrTruck)
+    
+    #framemodCT3 = cameraD3.putDistance(framemodCir3)
 
     if ret1:
-      cv2.imshow('Camero 1', framemodCT1)
+      cv2.imshow('Camero 1', framemodCir1)
     
     if ret2:
-      cv2.imshow('Camero 2', framemodCT2)
+      cv2.imshow('Camero 2', framemodCir2)
     
     if ret3:
-      cv2.imshow('Camero 3', framemodCT3)
+      cv2.imshow('Camero 3', framemodCir3)
 
     cameraD1.carLabel.destroyObject()
     cameraD1.motorLabel.destroyObject()
