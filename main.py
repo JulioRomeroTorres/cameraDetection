@@ -29,20 +29,20 @@ if __name__ == '__main__':
   
   #cameraD1.createDatset(2, 1, pathVideos, pathDataTrain)
 
-  model =   torch.hub.load('ultralytics/yolov5','yolov5s')
-  #model =   torch.hub.load('C:\\Users\\julit\Proyectos\\cameraAA\\yolov5','yolov5s')
-  #model = torch.hub.load('.../yolov5','custom', path = 'models/last.pt')
+  #model =   torch.hub.load('ultralytics/yolov5','yolov5s')
+  #model = torch.hub.load('ultralytics/yolov5','custom', path = 'models/best.pt')
+  model = torch.hub.load('../yolov5','custom', path = 'models/best.pt', source = 'local')
   
   dataCamera1 = cv2.VideoCapture(pathVideos+'11.mp4')
   dataCamera2 = cv2.VideoCapture(pathVideos+'4.mp4')
   dataCamera3 = cv2.VideoCapture(pathVideos+'15.avi')
 
-  cameraD1.displayVideo(dataCamera1, model)
+  #cameraD1.displayVideo(dataCamera1, model)
   #cameraD2.displayVideo(dataCamera2, model)
   #cameraD3.displayVideo(dataCamera3, model)
   #dataCamera1.isOpened() or dataCamera3.isOpened() or dataCamera2.isOpened()
 
-  '''while( True ):
+  while( True ):
 
     ret1, frame   = dataCamera1.read()
     frameDetect   = model(frame)
@@ -92,7 +92,7 @@ if __name__ == '__main__':
   dataCamera1.release()
   dataCamera2.release()
   dataCamera3.release()
-  cv2.destroyAllWindows()'''
+  cv2.destroyAllWindows()
 
   '''frame = cv2.imread('C:/Users/julit/Downloads/Camara/truckTest4.png')
   frameDetect   = model(frame)
