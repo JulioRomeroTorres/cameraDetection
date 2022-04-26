@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 import torch
+import math
 
 class labelDetected:
   def __init__(self):
@@ -31,7 +32,7 @@ class labelDetected:
 
 class trafficCamera():
 
-  def __init__(self, labelUsed, limitReg1, limitReg2):
+  def __init__(self,  realScale, pointRef, labelUsed, limitReg1, limitReg2):
     self.carLabel     = labelDetected()
     self.motorLabel   = labelDetected()
     self.busLabel     = labelDetected()
@@ -39,6 +40,8 @@ class trafficCamera():
     self.labelUsed    = labelUsed
     self.limitReg1    = limitReg1
     self.limitReg2    = limitReg2
+    self.realScale    = realScale
+    self.pointRef     = pointRef
 
   def getCenter(self, frameDetect, arrIdlabel):
     
@@ -67,7 +70,35 @@ class trafficCamera():
         self.truckLabel.defineCenter(resultPred[0][i,0].item(), resultPred[0][i,1].item(), resultPred[0][i,2].item(), resultPred[0][i,3].item() )  
         self.truckLabel.count = self.truckLabel.count + 1
         self.truckLabel.arrPrecis.append(resultPred[0][i,4].item())
-      
+  
+  def estimateDist(self):
+    arrDist = []
+    
+    for i in range(0, self.carLabel.count):
+      distRealx = ( self.carLabel.arrCentx[i] - self.pointRef[0] )*(self.carLabel.arrCentx[i] - self.pointRef[0])
+      distRealy = ( self.carLabel.arrCenty[i] - self.pointRef[1] )*(self.carLabel.arrCenty[i] - self.pointRef[1])
+      arrDist.append( self.realScale*math.sqrt( distRealx + distRealy )  )
+    
+    for i in range(0, self.truckLabel.count):
+      distRealx = ( self.truckLabel.arrCentx[i] - self.pointRef[0] )*(self.truckLabel.arrCentx[i] - self.pointRef[0])
+      distRealy = ( self.truckLabel.arrCenty[i] - self.pointRef[1] )*(self.truckLabel.arrCenty[i] - self.pointRef[1])
+      arrDist.append( self.realScale*math.sqrt( distRealx + distRealy )  )
+
+    return arrDist
+  
+  def putDistance(self, frame):
+    
+    distArr = self.estimateDist()
+    frameText = frame
+
+    for i in range(0, self.carLabel.count):
+      frameText = cv2.putText(img = frameText, text= str(distArr[i]), org = ( self.carLabel.arrCentx[i], self.carLabel.arrCenty[i] ), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
+
+    for i in range(0, self.truckLabel.count):
+      frameText = cv2.putText(img = frameText, text= str(distArr[i+self.carLabel.count]), org = ( self.carLabel.arrCentx[i], self.carLabel.arrCenty[i] ), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
+    
+    return frameText
+
   def intoRegion(self, globalPos, limitReg ):
 
     dimLimit = len(limitReg)

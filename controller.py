@@ -15,8 +15,6 @@ class plcS7:
         self.plc = snap7.client.Client()
 
     def sendData():
-
-    
         plc.connect(IP, RACK, SLOT)
         data = bytearray(2)
         print(data)

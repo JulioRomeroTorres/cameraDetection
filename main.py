@@ -1,5 +1,6 @@
 
 from trafficCam import trafficCamera
+from controller import plcS7
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
@@ -10,22 +11,27 @@ if __name__ == '__main__':
   pathVideos = 'C:/Users/julit/Downloads/Camara/video_'
   pathDataTrain = 'C:/Users/julit/Proyectos/cameraAA/dataset/train/'
   pathDataValid = 'C:/Users/julit/Proyectos/cameraAA/dataset/validation/'
+
+  refCamera1 = (0.0,0.0)
+  refCamera2 = (0.0,0.0)
+  refCamera3 = (0.0,0.0)
+
+  scaleCamera1 = 15.0
+  scaleCamera2 = 15.0
+  scaleCamera3 = 15.0
   
-  labelUsed = [ 2, 3, 5, 7 ]
+  labelUsed = [ 0, 1 ]
   limitReg1 = [  (624,300), (310,8) ]
   limitReg2 = [ (606, 354), (376, 91), (378, 129), (341, 164), (228, 186), (141, 184), (153, 294), (192, 351), (590, 352) ]
-  cameraD1  = trafficCamera(labelUsed, limitReg1, limitReg2)
-  print('Camera 1: ',cameraD1.limitReg1, ' ', cameraD1.limitReg2)
+  cameraD1  = trafficCamera( scaleCamera1, refCamera1, labelUsed, limitReg1, limitReg2)
   
   limitReg1 = [  (349,8), (322,8) ]
-  limitReg2 = [ (587,346), (347,11), (321,10), (273,344)  ]
-  cameraD2  = trafficCamera(labelUsed, limitReg1, limitReg2)
-  print('Camera 2: ',cameraD2.limitReg1, ' ', cameraD2.limitReg2)
+  limitReg2 = [ (587,346), (347,11), (321,10),`` (273,344)  ]
+  cameraD2  = trafficCamera( scaleCamera2, refCamera2, labelUsed, limitReg1, limitReg2)
   
   limitReg1 = [  (371,12), (339,9) ]
   limitReg2 = [ (567,352), (375,18), (338,15), (268,348) ]
-  cameraD3  = trafficCamera(labelUsed, limitReg1, limitReg2)
-  print('Camera 3: ',cameraD3.limitReg1, ' ', cameraD3.limitReg2)
+  cameraD3  = trafficCamera( scaleCamera3, refCamera3, labelUsed, limitReg1, limitReg2)
   
   #cameraD1.createDatset(2, 1, pathVideos, pathDataTrain)
 
@@ -49,27 +55,30 @@ if __name__ == '__main__':
     cameraD1.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir1 = cameraD1.drawCenter(framemodDetect)
+    framemodCT1 = cameraD1.putDistance(framemodCir1)
 
     ret2, frame  = dataCamera2.read()
     frameDetect  = model(frame)
     cameraD2.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir2 = cameraD2.drawCenter(framemodDetect)
+    framemodCT2 = cameraD2.putDistance(framemodCir2)
 
     ret3, frame   = dataCamera3.read()
     frameDetect   = model(frame)
     cameraD3.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir3 = cameraD3.drawCenter(framemodDetect)
+    framemodCT3 = cameraD3.putDistance(framemodCir3)
 
     if ret1:
-      cv2.imshow('Camero 1',framemodCir1)
+      cv2.imshow('Camero 1', framemodCT1)
     
     if ret2:
-      cv2.imshow('Camero 2',framemodCir2)
+      cv2.imshow('Camero 2', framemodCT2)
     
     if ret3:
-      cv2.imshow('Camero 3',framemodCir3)
+      cv2.imshow('Camero 3', framemodCT3)
 
     cameraD1.carLabel.destroyObject()
     cameraD1.motorLabel.destroyObject()
