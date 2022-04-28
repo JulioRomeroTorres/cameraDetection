@@ -9,8 +9,6 @@ import torch
 if __name__ == '__main__':
   
   pathVideos = 'C:/Users/julit/Downloads/Camara/video_'
-  pathDataTrain = 'C:/Users/julit/Proyectos/cameraAA/dataset/train/'
-  pathDataValid = 'C:/Users/julit/Proyectos/cameraAA/dataset/validation/'
 
   refCamera1 = (142 ,188)
   refCamera2 = (348 ,355)
@@ -39,20 +37,11 @@ if __name__ == '__main__':
   slotPlc = 1
   plcSem =   plcS7(ipPlc, rackPlc, slotPlc)
 
-  #cameraD1.createDatset(2, 1, pathVideos, pathDataTrain)
-
-  #model =   torch.hub.load('ultralytics/yolov5','yolov5s')
-  #model = torch.hub.load('ultralytics/yolov5','custom', path = 'models/best.pt')
   model = torch.hub.load('../yolov5','custom', path = 'models/best.pt', source = 'local')
   
   dataCamera1 = cv2.VideoCapture(pathVideos+'11.mp4')
   dataCamera2 = cv2.VideoCapture(pathVideos+'4.mp4')
   dataCamera3 = cv2.VideoCapture(pathVideos+'15.avi')
-
-  #cameraD1.displayVideo(dataCamera1, model)
-  #cameraD2.displayVideo(dataCamera2, model)
-  #cameraD3.displayVideo(dataCamera3, model)
-  #dataCamera1.isOpened() or dataCamera3.isOpened() or dataCamera2.isOpened()
 
   while( True ):
 
@@ -62,7 +51,6 @@ if __name__ == '__main__':
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir1, arrCar, arrTruck = cameraD1.drawCenter(framemodDetect)
     #plcSem.sendData(arrCar)
-    #framemodCT1 = cameraD1.putDistance(framemodCir1)
 
     ret2, frame  = dataCamera2.read()
     frameDetect  = model(frame)
@@ -70,7 +58,6 @@ if __name__ == '__main__':
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir2, arrCar, arrTruck = cameraD2.drawCenter(framemodDetect)
     #plcSem.sendData(arrTruck)
-    #framemodCT2 = cameraD2.putDistance(framemodCir2)
 
     ret3, frame   = dataCamera3.read()
     frameDetect   = model(frame)
@@ -79,8 +66,6 @@ if __name__ == '__main__':
     framemodCir3, arrCar, arrTruck = cameraD3.drawCenter(framemodDetect)
     #plcSem.sendData(arrTruck)
     
-    #framemodCT3 = cameraD3.putDistance(framemodCir3)
-
     if ret1:
       cv2.imshow('Camero 1', framemodCir1)
     
@@ -113,24 +98,5 @@ if __name__ == '__main__':
   dataCamera3.release()
   cv2.destroyAllWindows()
 
-  '''frame = cv2.imread('C:/Users/julit/Downloads/Camara/truckTest4.png')
-  frameDetect   = model(frame)
-  getCenter(frameDetect, labelUsed)
-  framemodDetect  = np.squeeze(frameDetect.render())
-  print('size fraame: ', frame.shape, ' modified size: ', framemodDetect.shape )
-  plt.imshow(framemodDetect)
-  plt.show()
-
-  framemodCir = drawCenter(framemodDetect)
-
-  carLabel.destroyObject()
-  motorLabel.destroyObject()
-  busLabel.destroyObject()
-  truckLabel.destroyObject()
-
-  cv2.imshow('Frame With Detection',framemodCir)
-  cv2.waitKey(0)
-    
-  cv2.destroyAllWindows()'''
 
 
