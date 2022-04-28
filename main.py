@@ -2,7 +2,6 @@
 from trafficCam import trafficCamera
 from controller import plcS7
 import matplotlib.pyplot as plt
-from mathFuncs import distb2p
 import numpy as np
 import cv2
 import torch
@@ -16,9 +15,9 @@ if __name__ == '__main__':
   refCamera3 = (353, 352)
 
   # Change to real scale
-  scaleCamera1 = 4.0
-  scaleCamera2 = 3.0
-  scaleCamera3 = 5.0
+  scaleCamera1 = 0.08
+  scaleCamera2 = 0.08
+  scaleCamera3 = 0.08
   
   labelUsed = [ 0, 1 ]
   limitReg1 = [ (539 ,233), (380 ,82) ]
@@ -51,21 +50,21 @@ if __name__ == '__main__':
     cameraD1.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir1, arrCar, arrTruck = cameraD1.drawCenter(framemodDetect)
-    #plcSem.sendData(arrCar)
+    #plcSem.sendData(np.array(arrTruck).sum())
 
     ret2, frame  = dataCamera2.read()
     frameDetect  = model(frame)
     cameraD2.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir2, arrCar, arrTruck = cameraD2.drawCenter(framemodDetect)
-    #plcSem.sendData(arrTruck)
+    #plcSem.sendData(np.array(arrCar).sum())
 
     ret3, frame   = dataCamera3.read()
     frameDetect   = model(frame)
     cameraD3.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir3, arrCar, arrTruck = cameraD3.drawCenter(framemodDetect)
-    #plcSem.sendData(arrTruck)
+    #plcSem.sendData(np.array(arrTruck).sum())
     
     if ret1:
       cv2.imshow('Camero 1', framemodCir1)

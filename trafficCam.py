@@ -71,14 +71,13 @@ class trafficCamera():
         self.busLabel.count = self.busLabel.count + 1
         self.busLabel.arrPrecis.append(resultPred[0][i,4].item())
 
-  def estimateDist(self, type, posX, posY):
+  def estimateDist(self, type, arrValp, posX, posY):
     
     if type == 0:
-      
       distRealx = ( posX - self.pointRef[0] )*(posX - self.pointRef[0])
       distRealy = ( posY - self.pointRef[1] )*(posY - self.pointRef[1])
       distPoint = 1.0*self.realScale*math.sqrt( distRealx + distRealy ) 
-      
+        
       return distPoint 
 
     elif type == 1:
@@ -95,18 +94,31 @@ class trafficCamera():
         arrDist.append( self.realScale*math.sqrt( distRealx + distRealy )  )
 
       return arrDist
-  
-  def putDistance(self, type, posX, posY, frame):
+    
+    elif type == 3:
+      if( len(arrValp) == 1 ):
+        distRealx = ( posX - self.pointRef[0] )*(posX - self.pointRef[0])
+        distRealy = ( posY - self.pointRef[1] )*(posY - self.pointRef[1])
+        distPoint = 1.0*self.realScale*math.sqrt( distRealx + distRealy ) 
+        return distPoint
+
+      elif ( len(arrValp) > 1 ):
+        distRealx = ( posX - arrValp[-1]  )*(posX - arrValp[-1] )
+        distRealy = ( posY - arrValp[-1]  )*(posY - arrValp[-1] )
+        distPoint = 1.0*self.realScale*math.sqrt( distRealx + distRealy ) 
+        return distPoint
+
+  def putDistance(self, type, arrVp, posX, posY, frame):
     
     frameText = frame
 
     if type == 0:
-      distP = self.estimateDist(0,posX, posY)
+      distP = self.estimateDist(0, arrVp, posX, posY)
       frameText = cv2.putText(img = frameText, text= str(distP), org = ( posX, posY), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
       return frameText, distP
     elif type == 1:
       
-      distArr = self.estimateDist(1,0,0)
+      distArr = self.estimateDist( 1, arrVp, 0, 0)
       for i in range(0, self.carLabel.count):
         frameText = cv2.putText(img = frameText, text= str(distArr[i]), org = ( self.carLabel.arrCentx[i], self.carLabel.arrCenty[i] ), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale = 0.5, color=(0, 255, 0),thickness=1)
 
@@ -129,7 +141,6 @@ class trafficCamera():
         into1Point = ((limitReg[(i+1)%dimLimit][0] - limitReg[i][0])*(globalPos[1] - limitReg[i][1]) - (limitReg[(i+1)%dimLimit][1] - limitReg[i][1])*(globalPos[0] - limitReg[i][0])) < 0 
         auxArr.append(int(into1Point))
       
-      print('Many of valids: ', sum(auxArr) )
       if( sum(auxArr) == dimLimit ):
         return True
       else:
@@ -145,6 +156,7 @@ class trafficCamera():
     validFrame = False
     arrCar = []
     arrTruck = []
+    arrAux = []
 
     for i in range(0, self.carLabel.count):
 
@@ -155,7 +167,7 @@ class trafficCamera():
       
       if validFrame:
         frame = self.addCiclec( frame, posX, posY )
-        frame, valC = self.putDistance(0, posX, posY, frame)
+        frame, valC = self.putDistance(0, arrCar, posX, posY, frame)
         arrCar.append(valC)
         #plc2Sent.sendData()
 
@@ -169,7 +181,7 @@ class trafficCamera():
       
       if validFrame:  
         frame = self.addCiclec( frame, posX, posY)
-        frame,valTr = self.putDistance(0, posX, posY, frame)
+        frame,valTr = self.putDistance(0, arrTruck,posX, posY, frame)
         arrTruck.append(valTr)
 
 
@@ -183,7 +195,7 @@ class trafficCamera():
       if validFrame:
         frame = self.addCiclec( frame, posX, posY)
         frame = self.putDistance(0, posX, posY, frame)
-        frame,valTr = self.putDistance(0, posX, posY, frame)
+        frame,valTr = self.putDistance(0, posX, arrAux, posY, frame)
         arrTruck.append(valTr)
 
     for i in range(0, self.busLabel.count):
@@ -196,7 +208,7 @@ class trafficCamera():
       if validFrame:  
         frame = self.addCiclec( frame, posX, posY )
         frame = self.putDistance(0, posX, posY, frame)
-        frame,valTr = self.putDistance(0, posX, posY, frame)
+        frame,valTr = self.putDistance(0, posX, arrAux, posY, frame)
         arrTruck.append(valTr)
 
     return frame, arrCar, arrTruck
