@@ -16,6 +16,7 @@ if __name__ == '__main__':
   refCamera2 = (348 ,355)
   refCamera3 = (353, 352)
 
+  # Change to real scale
   scaleCamera1 = 4.0
   scaleCamera2 = 3.0
   scaleCamera3 = 5.0
