@@ -12,17 +12,17 @@ if __name__ == '__main__':
   pathDataTrain = 'C:/Users/julit/Proyectos/cameraAA/dataset/train/'
   pathDataValid = 'C:/Users/julit/Proyectos/cameraAA/dataset/validation/'
 
-  refCamera1 = (0.0,0.0)
-  refCamera2 = (0.0,0.0)
-  refCamera3 = (0.0,0.0)
+  refCamera1 = (142 ,188)
+  refCamera2 = (348 ,355)
+  refCamera3 = (353, 352)
 
-  scaleCamera1 = 15.0
-  scaleCamera2 = 15.0
-  scaleCamera3 = 15.0
+  scaleCamera1 = 4.0
+  scaleCamera2 = 3.0
+  scaleCamera3 = 5.0
   
   labelUsed = [ 0, 1 ]
-  limitReg1 = [  (624,300), (310,8) ]
-  limitReg2 = [ (606, 354), (376, 91), (378, 129), (341, 164), (228, 186), (141, 184), (153, 294), (192, 351), (590, 352) ]
+  limitReg1 = [ (539 ,233), (380 ,82) ]
+  limitReg2 = [ (481 ,200), (366 ,84), (378 ,105), (376 ,137), (337 ,164), (281 ,180), (225 ,184), (170 ,182), (154 ,265), (226 ,269), (322 ,262), (393 ,243) , (476 ,194) ]
   cameraD1  = trafficCamera( scaleCamera1, refCamera1, labelUsed, limitReg1, limitReg2)
   
   limitReg1 = [  (349,8), (322,8) ]
@@ -33,20 +33,10 @@ if __name__ == '__main__':
   limitReg2 = [ (567,352), (375,18), (338,15), (268,348) ]
   cameraD3  = trafficCamera( scaleCamera3, refCamera3, labelUsed, limitReg1, limitReg2)
   
-  ipPlc   = '192.168.0.1'
+  ipPlc   = '192.168.252.12'
   rackPlc = 0
   slotPlc = 1
-  plc1 =   plcS7(ipPlc, rackPlc, slotPlc)
-
-  ipPlc   = '192.168.0.1'
-  rackPlc = 0
-  slotPlc = 1
-  plc2 =   plcS7(ipPlc, rackPlc, slotPlc)
-  
-  ipPlc   = '192.168.0.1'
-  rackPlc = 0
-  slotPlc = 1
-  plc3 =   plcS7(ipPlc, rackPlc, slotPlc)
+  plcSem =   plcS7(ipPlc, rackPlc, slotPlc)
 
   #cameraD1.createDatset(2, 1, pathVideos, pathDataTrain)
 
@@ -70,7 +60,7 @@ if __name__ == '__main__':
     cameraD1.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir1, arrCar, arrTruck = cameraD1.drawCenter(framemodDetect)
-    #plc1.sendData(arrCar)
+    #plcSem.sendData(arrCar)
     #framemodCT1 = cameraD1.putDistance(framemodCir1)
 
     ret2, frame  = dataCamera2.read()
@@ -78,7 +68,7 @@ if __name__ == '__main__':
     cameraD2.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir2, arrCar, arrTruck = cameraD2.drawCenter(framemodDetect)
-    #plc2.sendData(arrTruck)
+    #plcSem.sendData(arrTruck)
     #framemodCT2 = cameraD2.putDistance(framemodCir2)
 
     ret3, frame   = dataCamera3.read()
@@ -86,7 +76,7 @@ if __name__ == '__main__':
     cameraD3.getCenter(frameDetect, labelUsed)
     framemodDetect  = np.squeeze(frameDetect.render())
     framemodCir3, arrCar, arrTruck = cameraD3.drawCenter(framemodDetect)
-    #plc3.sendData(arrTruck)
+    #plcSem.sendData(arrTruck)
     
     #framemodCT3 = cameraD3.putDistance(framemodCir3)
 

@@ -39,7 +39,7 @@ def getPoints(event, x, y, flag, params):
     
 def getLimitvideo():
 
-    video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_11.mp4')
+    video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_15.avi')
     count = 0
 
     while(video.isOpened()):
@@ -49,7 +49,7 @@ def getLimitvideo():
 
         if cv2.waitKey(10) == ord('s'):
           count = count + 1
-          cv2.imwrite('C:/Users/julit/Proyectos/cameraAA/cameraDetection/dataset/train/' + str(count) + '.jpg' , frame)
+          cv2.imwrite('C:/Users/julit/Proyectos/cameraAA/cameraDetection/limits/' + str(count) + '.jpg' , frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -58,7 +58,7 @@ def getLimitvideo():
 
 def displayResul():
 
-    frame = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/dataset/train/1.jpg')
+    frame = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/limits/camera_3.jpg')
     #malFunc()
 
     print('Dimension: ', frame.shape)
