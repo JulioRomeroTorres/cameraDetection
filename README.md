@@ -5,3 +5,10 @@ In LAN,there are the following IP addres:
     VM:    192.168.252.15
     CPU:   192.168.252.3
     PLC:   192.168.252.12
+Also the path view have this addres:
+    Camera 1: 'rtsp://admin:dcsautomation123@192.168.0.100/80'
+    Camera 2: 'rtsp://admin:dcsautomation123@192.168.0.101/80'
+    Camera 3: 'rtsp://admin:dcsautomation123@192.168.0.102/80'
+In code:
+    pathVideos:'rtsp://admin:dcsautomation123@192.168.0.'
+    Camera's addres: '100/80'
