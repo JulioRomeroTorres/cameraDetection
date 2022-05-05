@@ -2,6 +2,7 @@
 
 import cv2
 from cv2 import imshow
+from mathFuncs import resizeImg
 
 def malFunc():
     a = (1515,605)
@@ -39,11 +40,13 @@ def getPoints(event, x, y, flag, params):
     
 def getLimitvideo():
 
-    video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_15.avi')
+    #video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_15.avi')
+    video = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.102/80')
     count = 0
 
     while(video.isOpened()):
         ret, frame = video.read()
+        frame = resizeImg(frame,50)
         print('Print dimension: ', frame.shape)
         cv2.imshow('frame', frame)
 
@@ -58,7 +61,7 @@ def getLimitvideo():
 
 def displayResul():
 
-    frame = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/limits/camera_3.jpg')
+    frame = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/limits/3.jpg')
     #malFunc()
 
     print('Dimension: ', frame.shape)
@@ -71,8 +74,10 @@ def displayResul():
 
 def displayVideo():
 
+    
     image = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/dataset/train/1.jpg')
-    print('Print dim: ', image.shape)
+    #image = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/dataset/train/1.jpg')
+    #print('Print dim: ', image.shape)
     cv2.imshow('ddd',image)
     cv2.waitKey(0)
     print(labelUsed)

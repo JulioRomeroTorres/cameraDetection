@@ -42,51 +42,51 @@ if __name__ == '__main__':
   model = torch.hub.load('../yolov5','custom', path = 'models/best.pt', source = 'local')
   model.to(deviceCuda)
   
-  '''dataCamera1 = cv2.VideoCapture(pathVideos + '4.mp4')
+  dataCamera1 = cv2.VideoCapture(pathVideos + '4.mp4')
   dataCamera2 = cv2.VideoCapture(pathVideos + '11.mp4')
-  dataCamera3 = cv2.VideoCapture(pathVideos + '15.avi')'''
+  dataCamera3 = cv2.VideoCapture(pathVideos + '15.avi')
 
-  dataCamera1 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.100/80')
+  '''dataCamera1 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.100/80')
   dataCamera2 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.101/80')
-  dataCamera3 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.102/80')
+  dataCamera3 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.102/80')'''
 
   while( True ):
 
     ret1, frame   = dataCamera1.read()    
     if ret1:
       
-      frame = resizeImg(frame,50)
+      frame = resizeImg(frame,100)
       frameDetect   = model(frame)
-      cameraD1.getCenter(frameDetect, labelUsed)
-      framemodDetect  = np.squeeze(frameDetect.render())
-      framemodCir1, arrCar, arrTruck = cameraD1.drawCenter(framemodDetect)
-      #cv2.imshow('Camero 1 Ori', frame)
-      cv2.imshow('Camero 1', framemodCir1)
+      #cameraD1.getCenter(frameDetect, labelUsed)
+      #framemodDetect  = np.squeeze(frameDetect.render())
+      #framemodCir1, arrCar, arrTruck = cameraD1.drawCenter(framemodDetect)
+      cv2.imshow('Camero 1 Ori', frame)
+      #cv2.imshow('Camero 1', framemodCir1)
       #plcSem.sendData(np.array(arrTruck).sum())
 
     ret2, frame  = dataCamera2.read()
     if ret2:
 
-      frame = resizeImg(frame,50)
-      frameDetect  = model(frame)
-      cameraD2.getCenter(frameDetect, labelUsed)
-      framemodDetect  = np.squeeze(frameDetect.render())
-      framemodCir2, arrCar, arrTruck = cameraD2.drawCenter(framemodDetect)
+      frame = resizeImg(frame,100)
+      #frameDetect  = model(frame)
+      #cameraD2.getCenter(frameDetect, labelUsed)
+      #framemodDetect  = np.squeeze(frameDetect.render())
+      #framemodCir2, arrCar, arrTruck = cameraD2.drawCenter(framemodDetect)
       #plcSem.sendData(np.array(arrCar).sum())
-      #cv2.imshow('Camero 2 Ori', frame)
-      cv2.imshow('Camero 2', framemodCir2)
+      cv2.imshow('Camero 2 Ori', frame)
+      #cv2.imshow('Camero 2', framemodCir2)
     
     ret3, frame   = dataCamera3.read()
     if ret3:
 
-      frame = resizeImg(frame,50)
-      frameDetect   = model(frame)
-      cameraD3.getCenter(frameDetect, labelUsed)
-      framemodDetect  = np.squeeze(frameDetect.render())
-      framemodCir3, arrCar, arrTruck = cameraD3.drawCenter(framemodDetect)
+      frame = resizeImg(frame,100)
+      #frameDetect   = model(frame)
+      #cameraD3.getCenter(frameDetect, labelUsed)
+      #framemodDetect  = np.squeeze(frameDetect.render())
+      #framemodCir3, arrCar, arrTruck = cameraD3.drawCenter(framemodDetect)
       #plcSem.sendData(np.array(arrTruck).sum())
-      #cv2.imshow('Camero 3 Ori', frame)
-      cv2.imshow('Camero 3', framemodCir3) 
+      cv2.imshow('Camero 3 Ori', frame)
+      #cv2.imshow('Camero 3', framemodCir3) 
 
     cameraD1.carLabel.destroyObject()
     cameraD1.motorLabel.destroyObject()
