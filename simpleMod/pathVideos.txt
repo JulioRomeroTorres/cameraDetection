@@ -1,0 +1,6 @@
+# cam1's Parameters are ready
+#at the noght unique problem the area reduce to aproximately 100
+pathVideo = 'C:/Users/julit/Downloads/Camara/video'
+videoCam1 = cv2.VideoCapture(pathVideo + '_4.mp4' )
+videoCam2 = cv2.VideoCapture(pathVideo + '_11.mp4' )
+videoCam3 = cv2.VideoCapture(pathVideo + '_15.avi' )

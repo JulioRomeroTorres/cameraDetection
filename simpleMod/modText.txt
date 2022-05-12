@@ -1,0 +1,10 @@
+limitReg1 = [(443, 351), (330, 6)]
+limitReg2 = [ [443, 351], [330, 6], [318, 5], [262, 348] ]
+cameraD1  = trafficCamera( scaleCamera1, refCamera1, labelUsed, limitReg1, limitReg2)
+
+limitReg1 = [(566, 267), (292, 18)]
+limitReg2 = [ [481, 200], [415, 127], [366, 81], [378, 119], [366, 149], [269, 180], [195, 180], [190, 276], [332, 264], [409, 243], [450, 208] ]
+cameraD2  = trafficCamera( scaleCamera2, refCamera2, labelUsed, limitReg1, limitReg2)
+
+limitReg1 = [(445, 324), (356, 12)]
+limitReg2 = [ [432, 327], [350, 13], [338, 9], [268, 316] ]
