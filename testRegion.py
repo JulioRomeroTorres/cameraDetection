@@ -3,6 +3,30 @@
 import cv2
 from cv2 import imshow
 from mathFuncs import resizeImg
+from mathFuncs import rezImg2
+import numpy as np
+
+def intoRegion(globalPos, limitReg ):
+
+    dimLimit = len(limitReg)
+
+    if( dimLimit == 2 ):
+        into1Point = ((limitReg[1][0] - limitReg[0][0])*(globalPos[1] - limitReg[0][1]) - (limitReg[1][1] - limitReg[0][1])*(globalPos[0] - limitReg[0][0])) < 0  
+        return into1Point
+
+    elif( dimLimit >= 3 ):
+        auxArr = []
+        for i in range(0,dimLimit):
+            into1Point = ((limitReg[(i+1)%dimLimit][0] - limitReg[i][0])*(globalPos[1] - limitReg[i][1]) - (limitReg[(i+1)%dimLimit][1] - limitReg[i][1])*(globalPos[0] - limitReg[i][0])) < 0 
+            auxArr.append(int(into1Point))
+            print('----------')
+            print( 'Limites: ', limitReg[i][0] , limitReg[i][1], limitReg[(i+1)%dimLimit][0], limitReg[(i+1)%dimLimit][1] )
+            print('Is valid: ', into1Point)
+        
+        if( sum(auxArr) == dimLimit ):
+            return True
+        else:
+            return False
 
 def malFunc():
     a = (1515,605)
@@ -40,13 +64,13 @@ def getPoints(event, x, y, flag, params):
     
 def getLimitvideo():
 
-    #video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_15.avi')
-    video = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.102/80')
+    video = cv2.VideoCapture('C:/Users/julit/Downloads/Camara/video_11.mp4')
+    #video = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.102/80')
     count = 0
 
     while(video.isOpened()):
         ret, frame = video.read()
-        frame = resizeImg(frame,50)
+        frame = resizeImg(frame,100)
         print('Print dimension: ', frame.shape)
         cv2.imshow('frame', frame)
 
@@ -61,14 +85,15 @@ def getLimitvideo():
 
 def displayResul():
 
-    frame = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/limits/3.jpg')
+    frame = cv2.imread('C:/Users/julit/Proyectos/cameraAA/cameraDetection/limits/camera_15.jpg')
     #malFunc()
-
+    #frame = rezImg2(frame,(320,320))
     print('Dimension: ', frame.shape)
     cv2.imshow("Frame With Detection",frame)
     cv2.setMouseCallback("Frame With Detection", getPoints )
 
     cv2.waitKey(0) 
+
         
     cv2.destroyAllWindows()
 
@@ -85,6 +110,8 @@ def displayVideo():
 if __name__ == '__main__':
 
     labelUsed = [ 2, 3, 5, 7 ]
+    limitReg  = np.array([ [481, 200], [415, 127], [366, 81], [378, 119], [366, 149], [269, 180], [195, 180], [190, 276], [332, 264], [409, 243], [450, 208] ])
+    #print( intoRegion(  (400, 197), limitReg) )
     #getLimitvideo()
     displayResul()
     

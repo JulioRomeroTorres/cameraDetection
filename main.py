@@ -20,7 +20,7 @@ if __name__ == '__main__':
   scaleCamera1 = 0.08
   scaleCamera2 = 0.08
   scaleCamera3 = 0.08
-  
+    
   labelUsed = [ 0, 1 ]
   limitReg1 = [(443, 351), (330, 6)]
   limitReg2 = [(443, 351), (330, 6), (318, 5), (262, 348)]
@@ -42,13 +42,13 @@ if __name__ == '__main__':
   model = torch.hub.load('../yolov5','custom', path = 'models/best.pt', source = 'local')
   model.to(deviceCuda)
   
-  '''dataCamera1 = cv2.VideoCapture(pathVideos + '4.mp4')
+  dataCamera1 = cv2.VideoCapture(pathVideos + '4.mp4')
   dataCamera2 = cv2.VideoCapture(pathVideos + '11.mp4')
-  dataCamera3 = cv2.VideoCapture(pathVideos + '15.avi')'''
+  dataCamera3 = cv2.VideoCapture(pathVideos + '15.avi')
 
-  dataCamera1 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.100/80')
+  '''dataCamera1 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.100/80')
   dataCamera2 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.101/80')
-  dataCamera3 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.102/80')
+  dataCamera3 = cv2.VideoCapture('rtsp://admin:dcsautomation123@192.168.0.102/80')'''
 
   while( True ):
 

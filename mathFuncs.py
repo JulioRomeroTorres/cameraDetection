@@ -10,3 +10,10 @@ def resizeImg(frame, scaleF):
     resizedFrame = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
     
     return resizedFrame
+
+
+def rezImg2(frame, newDim):
+
+    resizedFrame = cv2.resize(frame, newDim, interpolation = cv2.INTER_AREA)
+    
+    return resizedFrame
